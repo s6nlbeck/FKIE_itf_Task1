@@ -24,6 +24,12 @@ def calc_sent_embd(text):
     return vec
 
 def get_no_sent(tuples_list, nummer):
+    """
+
+    :param tuples_list:
+    :param nummer:
+    :return:
+    """
     for tuple in tuples_list:
         if tuple[0]==nummer:
             return tuple[1]
