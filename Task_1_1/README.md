@@ -1,4 +1,4 @@
-#Subtask 1
+# Subtask 1
 
 
 The first subtask is about detecting events about riots and social movements in news articles. A single training instance looks like this:
