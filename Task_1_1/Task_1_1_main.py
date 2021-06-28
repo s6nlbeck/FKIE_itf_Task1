@@ -375,7 +375,6 @@ def read(path):
     Read the given file line for line and append the deserialized object to the list. 
     """
     for instance in file:
-        print(instance)
         data.append(json.loads(instance))
     file.close()
     return data
@@ -521,10 +520,64 @@ def submission_routine():
     generate_submission(transformed_data_pr, model, "paper-one-net-submission-pr")
     generate_submission(transformed_data_hi, model, "paper-one-net-submission-hi")
 
+def run_example():
+    """
+    This is an example for the main part. It uses all functions to train and evaluate the network.
+    :return: Nothing
+    """
+    train = True
+    if train:
+        """
+        First, we read in the training data file.    
+        """
+        create_doc_embeddings_list("Example_data/en-train.json", "Example_data/en-train-embeddings.pkl")
+        create_doc_embeddings_list("Example_data/es-train.json", "Example_data/es-train-embeddings.pkl")
+        create_doc_embeddings_list("Example_data/pr-train.json", "Example_data/pr-train-embeddings.pkl")
+
+        """
+        Read in the embeddings.
+        """
+        train_data_en = read_pickle("Example_data/en-train-embeddings.pkl")
+        train_data_es = read_pickle("Example_data/es-train-embeddings.pkl")
+        train_data_pr = read_pickle("Example_data/pr-train-embeddings.pkl")
+
+        """
+        Build a multilingual train set by concatenating the different sets.
+        """
+        all_data_train = np.concatenate([train_data_en[0], train_data_es[0], train_data_pr[0]], axis=0)
+        all_label_train = np.concatenate([train_data_en[1], train_data_es[1], train_data_pr[1]], axis=0)
+        data_train = (all_data_train, all_label_train)
+
+        model = Net_Container(num_nets=10)
+
+        model.fit(data_train,epochs=20, stats=False)
+        model.save("Example_data/Example_Model")
+
+    else:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     # Makes Submsions
     # submission_routine()
+    run_example()
+    exit()
 
     train_mode = True
     data_en = read_pickle("Sent_Embds/en-sent.pkl")
