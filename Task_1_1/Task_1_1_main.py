@@ -253,9 +253,9 @@ def create_doc_embeddings_list_test_data(data, path_out):
     """
     This method is used for transforming the given test dataset of subtask 1 to a form, which can be used as input for a
     trained model. Is used when there are no labels.
-    :param data:
-    :param path_out:
-    :return:
+    :param data: the data which should be transformed.
+    :param path_out: Path of the output file
+    :return: the transformed data
     """
     instances = []
     """
@@ -272,7 +272,7 @@ def create_doc_embeddings_list_test_data(data, path_out):
     Iterate over the complete dataset and generate the embeddings.
     """
     for entry in data:
-        print("Counter: ", counter)
+        print("Instance: ", counter)
         text = entry["text"]
         id = entry["id"]
         """
@@ -525,7 +525,7 @@ def run_example():
     This is an example for the main part. It uses all functions to train and evaluate the network.
     :return: Nothing
     """
-    train = True
+    train = False
     if train:
         """
         First, we read in the training data file.    
@@ -554,21 +554,16 @@ def run_example():
         model.save("Example_data/Example_Model")
 
     else:
-        pass
 
+        model = Net_Container(list_of_nets=[])
+        model.load_nets("Example_data/Example_Model")
 
+        test_data = read("Example_data/test-en.json")
+        transformed_test_data = create_doc_embeddings_list_test_data(test_data,"Example_data/test-data-en.pkl")
 
+        generate_submission(transformed_test_data, model, "Example_data/predictions")
 
-
-
-
-
-
-
-
-
-
-
+        print(model.predict(transformed_test_data[0][1]))
 
 
 
@@ -610,6 +605,6 @@ if __name__ == "__main__":
         data_to_train = (all_data_train, all_label_train)
 
         # model = Net_Container()
-        model = Net_Container(num_nets=1)
-        model.fit(data_to_train, epochs=100, stats=True)
+        model = Net_Container(num_nets=100)
+        model.fit(data_to_train, epochs=20, stats=False)
         model.save("trained_model")
