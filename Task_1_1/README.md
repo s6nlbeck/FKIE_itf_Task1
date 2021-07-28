@@ -60,3 +60,4 @@ Now we can use the `````generate_submission````` function to generate a file, co
 generate_submission(transformed_test_data, model, "Example_data/predictions")
 ````
 For predicting the label of single document embeddings, use the ````model.predict```` method. The model used in this paper can be found in the directory Net_container_nets_trained_on2021.
+Using the function ````submission_routine```` the results from the paper can be reproduced.
