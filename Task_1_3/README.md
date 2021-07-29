@@ -13,3 +13,22 @@ instance like this:
 
 ````
 
+## Training
+An example for the training is given in the main method.
+To train a model you have to transform the data using the ```transfrom_to_sentence_embds``` method. This method 
+creates for each instance the embeddings and combines them to positive and negative triples. With this transformed data,
+the model can be trained as usual, using the fit function.
+
+## Predicting
+
+To predict the clusters, use the ```predict``` function. The predict function needs a list containing the instances to predict.
+This means it takes as input a list of instances like:
+```
+[
+(id, [(embd, sent_no)(.,..)(.,..)(.,..)(.,..)]),
+(id, [(embd, sent_no)(.,..)(.,..)(.,..)(.,..)]),
+]
+```
+
+To reproduce the results from the paper use the ```generate_submission``` function. This code
+was used to produce the results of the paper.

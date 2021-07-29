@@ -237,28 +237,10 @@ class OneClusterModel():
         preds = []
         for tuple in data:
             id = tuple[0]
-            list_with_sentences =  tuple[1]
+            list_with_sentences = tuple[1]
             clusters = self.predict_clusters(list_with_sentences)
             new_dict = {"id":id, "pred_clusters":clusters}
             preds.append(new_dict)
-        """
-        Takes some data (.json) and makes predictions.
-        Simply puts all sentences in a single cluster.
-        """
-
-
-        """
-        Es wird erwatet eine file auszugeben mit dem Aufbau
-        
-        {"id": 35055, "pred_clusters": [[2, 3]]}
-        {"id": 35052, "pred_clusters": [[1, 2, 3, 4]]}
-        {"id": 35057, "pred_clusters": [[1, 2, 3]]}
-        """
-
-        """     preds = []
-                for idx,instance in enumerate(data):
-                    preds.append({"id":instance["id"], "pred_clusters": [instance['sentence_no']]})
-        """
         return preds
 
 def read_pickle(path):
@@ -325,6 +307,52 @@ def parse():
     parser.add_argument('-test_file', '--test_file', required=False, help="The path to the test data json file")
     args = parser.parse_args()
     return args
+
+
+
+
+
+def create_submission():
+    """
+    This code was used to produce the results of the paper.
+    """
+    data_es = read("Test_Data_Raw/test-es.json")
+    data_en = read("Test_Data_Raw/test-en.json")
+    data_pr = read("Test_Data_Raw/test-pr.json")
+
+    t_en = generate_test_data(data_en, "Test_Data_Raw/ebbd-en.pkl")
+    t_es = generate_test_data(data_es, "Test_Data_Raw/ebbd-es.pkl")
+    t_pr = generate_test_data(data_pr, "Test_Data_Raw/ebbd-pr.pkl")
+
+    # test_data = read_pickle("Test_Data_Raw/Embedded_Test_Data.pkl")
+
+    train_ins = read_pickle("embd_en-train.pkl")
+    print(len(train_ins[0]))
+    one_isnt = train_ins[0]
+    print(one_isnt)
+    exit()
+
+    model = OneClusterModel.load("comparer_model")
+    model.comparer.model.summary()
+
+    train_predictions = model.predict(t_en)
+    with open("submission_en.json", "w", encoding="utf-8") as f:
+        for doc in train_predictions:
+            f.write(json.dumps(doc) + "\n")
+
+    train_predictions = model.predict(t_es)
+    with open("submission_es.json", "w", encoding="utf-8") as f:
+        for doc in train_predictions:
+            f.write(json.dumps(doc) + "\n")
+
+    train_predictions = model.predict(t_pr)
+    with open("submission_pr.json", "w", encoding="utf-8") as f:
+        for doc in train_predictions:
+            f.write(json.dumps(doc) + "\n")
+
+
+
+
 
 
 def main(train_file,prediction_output_file,test_file=None):
