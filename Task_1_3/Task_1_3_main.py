@@ -11,7 +11,7 @@ from flair.data import Sentence
 from flair.embeddings import TransformerDocumentEmbeddings
 from keras import layers
 import numpy as np
-import matplotlib.pyplot as plt
+
 
 
 flair.device = torch.device('cpu')
@@ -25,19 +25,27 @@ def calc_sent_embd(text):
 
 def get_no_sent(tuples_list, nummer):
     """
-
+    This functions returns the sentence correspoding to the number.
     :param tuples_list:
     :param nummer:
     :return:
     """
     for tuple in tuples_list:
-        if tuple[0]==nummer:
+        if tuple[0] == nummer:
             return tuple[1]
     raise IOError()
 
 
 def transfrom_to_sentence_embds(data,out_path):
-    """Reads in the training data and outputs a file consisting of data to feed to a Neuronal net."""
+    """
+    Uses the training data and outputs a file consisting of data to feed to a neural net.
+    In this method the sentences of each instance are combined to produce positive and negative examples.
+    In this method also the embeddings are calculated.
+    :param data: List with instances
+    :param out_path: path of the output file
+    :return: return the calculated list
+    """
+
     result_list = []
     for instance in data:
         # Creates a list with number-sentence tuples
@@ -49,6 +57,7 @@ def transfrom_to_sentence_embds(data,out_path):
             this_cl_embd = []
             for sent_num in cl:
                 sent = get_no_sent(tuples_mat_nr, sent_num)
+                #Calculate embedding
                 result = calc_sent_embd(sent)
                 this_cl_embd.append(result)
             embd_clusters.append(this_cl_embd)
@@ -197,8 +206,12 @@ class OneClusterModel():
         self.comparer.fit(data, epochs = epochs)
 
     def predict_clusters(self,data):
-        """Assume that data has the form of [(embd, sent_no)(embd, sent_no)(embd, sent_no)(embd, sent_no)(embd, sent_no)]"""
-
+        """
+        Assume that data has the form of [(embd, sent_no)(embd, sent_no)(embd, sent_no)(embd, sent_no)(embd, sent_no)].
+        This function predicts the clusters of an unlabeled instance.
+        :param data: List containing tuples of embeddings and sentence numbers.
+        :return: List containing the clusters as lists.
+        """
 
         G = nx.Graph()
         for index, tuple in enumerate(data):
@@ -269,7 +282,7 @@ def read(path):
             data.append(json.loads(instance))
     return data
 
-#CHECK
+
 def convert_to_scorch_format(docs, cluster_key="event_clusters"):
     # Merge all documents' clusters in a single list
 
@@ -283,7 +296,7 @@ def convert_to_scorch_format(docs, cluster_key="event_clusters"):
 
     return all_links, all_events
 
-#CHECK - Changed to original
+
 def evaluate(goldfile, sysfile):
     """
     Uses scorch -a python implementaion of CoNLL-2012 average score- for evaluation. > https://github.com/LoicGrobol/scorch | pip install scorch
