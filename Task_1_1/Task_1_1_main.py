@@ -381,6 +381,13 @@ def read(path):
 
 
 def evaluate_on_embeddings(model, data, path_result):
+    """
+    This function has mainly development purposes.
+    :param model:
+    :param data:
+    :param path_result:
+    :return:
+    """
     labels, preds = [], []
     size_of_dataset = len(data[0])
     counter = 0
@@ -461,6 +468,13 @@ def split_data():
 
 
 def generate_submission(transformed_data, model, path):
+    """
+    This function is used to generate the submission as needed for the shared task.
+    :param transformed_data:
+    :param model:
+    :param path:
+    :return:
+    """
     result_list = []
     counter = 0
     lenght = len(transformed_data)

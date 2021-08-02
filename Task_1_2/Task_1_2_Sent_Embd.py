@@ -14,6 +14,10 @@ import matplotlib.pyplot as plt
 
 
 def create_model():
+    """
+    Creates a Keras model as in the paper.
+    :return:
+    """
     input_shape = (768,)
     input = keras.Input(shape=input_shape)
     x = layers.Dense(64, activation="sigmoid")(input)
@@ -88,6 +92,12 @@ def read_json_file(path):
     return data
 
 def generate_embeddings_sentence_test_data(data, path_out):
+    """
+    Generates the embeddings for unlabeled data.
+    :param data: List with instances
+    :param path_out: output file
+    :return: list with embeddings
+    """
     flair.device = torch.device('cpu')
     dicts = []
     # init multilingual BERT
